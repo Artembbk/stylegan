@@ -12,7 +12,7 @@ class AnimeFacesDataset(Dataset):
     def __init__(self, config, index_file):
         super(AnimeFacesDataset, self).__init__()
 
-        self.data_path = config["dataset"]["path"]
+        self.data_path = config["data"]["path"]
         self.img_labels = pd.read_csv(index_file)
 
     def __len__(self):
