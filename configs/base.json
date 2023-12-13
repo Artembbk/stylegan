@@ -2,17 +2,20 @@
     "data": {
         "index_path": "/kaggle/working/stylegan",
         "data_path": "/kaggle/input/anime-faces/data",
-        "train": {
-            "batch_size": 32,
-            "limit": 100
-        },
-        "val": {
-            "batch_size": 32,
-            "limit": 100
-        },
-        "test": {
-            "batch_size": 32,
-            "limit": 100
+        "parts": {
+            "train": {
+                "batch_size": 32,
+                "limit": 100
+            },
+            "val": {
+                "batch_size": 32,
+                "limit": 100
+            },
+            "test": {
+                "batch_size": 32,
+                "limit": 100
+            }
         }
+        
     }
 }

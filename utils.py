@@ -10,8 +10,8 @@ def create_indexes(config):
     
     i = 0
     for part in config["data"]:
-        part_index = index.iloc[i:config["data"][part]["limit"]]
-        i = config["data"][part]["limit"]
+        part_index = index.iloc[i:config["data"]["parts"][part]["limit"]]
+        i = config["data"]["parts"][part]["limit"]
 
         with open(config["data"]["index_path"], f"{part}.csv", "w") as f: 
             part_index.to_csv(f)
@@ -26,4 +26,4 @@ def get_dataloaders(config):
         if not os.path.exists(index_path):
             create_indexes(config)
         dataset = AnimeFacesDataset(config, part, index_path)
-        dataloaers[part] = DataLoader(dataset, batch_size=config["data"][part]["batch_size"], shuffle=True if part == "train" else False)
+        dataloaers[part] = DataLoader(dataset, batch_size=config["data"]["parts"][part]["batch_size"], shuffle=True if part == "train" else False)
