@@ -25,5 +25,5 @@ def get_dataloaders(config):
         index_path = os.path.join(config["data"]["index_path"], f"{part}.csv")
         if not os.path.exists(index_path):
             create_indexes(config)
-        dataset = AnimeFacesDataset(config, part, index_path)
+        dataset = AnimeFacesDataset(config, index_path)
         dataloaers[part] = DataLoader(dataset, batch_size=config["data"]["parts"][part]["batch_size"], shuffle=True if part == "train" else False)
