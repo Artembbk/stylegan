@@ -20,10 +20,11 @@ def create_indexes(config):
 
 
 def get_dataloaders(config):
-    dataloaers = {}
+    dataloaders = {}
     for part in config["data"]["parts"]:
         index_path = os.path.join(config["data"]["index_path"], f"{part}_{config['data']['parts'][part]['limit']}.csv")
         if not os.path.exists(index_path):
             create_indexes(config)
         dataset = AnimeFacesDataset(config, index_path)
-        dataloaers[part] = DataLoader(dataset, batch_size=config["data"]["parts"][part]["batch_size"], shuffle=True if part == "train" else False)
+        dataloaders[part] = DataLoader(dataset, batch_size=config["data"]["parts"][part]["batch_size"], shuffle=True if part == "train" else False)
+    return dataloaders
