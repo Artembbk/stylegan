@@ -1,7 +1,7 @@
 {
     "data": {
-        "index_path": "",
-        "data_path": "",
+        "index_path": "/kaggle/working/stylegan",
+        "data_path": "/kaggle/input/anime-faces/data",
         "train": {
             "batch_size": 32,
             "limit": 100
