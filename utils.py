@@ -9,7 +9,7 @@ def create_indexes(config):
 
     
     i = 0
-    for part in config["data"]:
+    for part in config["data"]["parts"]:
         part_index = index.iloc[i:config["data"]["parts"][part]["limit"]]
         i = config["data"]["parts"][part]["limit"]
 
