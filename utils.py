@@ -13,7 +13,7 @@ def create_indexes(config):
         part_index = index.iloc[i:config["data"]["parts"][part]["limit"]]
         i = config["data"]["parts"][part]["limit"]
 
-        with open(config["data"]["index_path"], f"{part}.csv", "w") as f: 
+        with open(os.path.join(config["data"]["index_path"], f"{part}.csv"), "w") as f: 
             part_index.to_csv(f)
     
 
