@@ -1,0 +1,18 @@
+{
+    "data": {
+        "index_path": "",
+        "data_path": "",
+        "train": {
+            "batch_size": 32,
+            "limit": 100
+        },
+        "val": {
+            "batch_size": 32,
+            "limit": 100
+        },
+        "test": {
+            "batch_size": 32,
+            "limit": 100
+        }
+    }
+}
