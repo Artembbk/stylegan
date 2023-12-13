@@ -21,7 +21,7 @@ def create_indexes(config):
 
 def get_dataloaders(config):
     dataloaers = {}
-    for part in config["data"]:
+    for part in config["data"]["parts"]:
         index_path = os.path.join(config["data"]["index_path"], f"{part}.csv")
         if not os.path.exists(index_path):
             create_indexes(config)
