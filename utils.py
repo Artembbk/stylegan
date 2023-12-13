@@ -13,7 +13,7 @@ def create_indexes(config):
         part_index = index.iloc[i:config["data"]["parts"][part]["limit"]]
         i = config["data"]["parts"][part]["limit"]
 
-        with open(os.path.join(config["data"]["index_path"], f"{part}.csv"), "w") as f: 
+        with open(os.path.join(config["data"]["index_path"], f"{part}_{config['data']['parts'][part]['limit']}.csv"), "w") as f: 
             part_index.to_csv(f)
     
 
@@ -22,7 +22,7 @@ def create_indexes(config):
 def get_dataloaders(config):
     dataloaers = {}
     for part in config["data"]["parts"]:
-        index_path = os.path.join(config["data"]["index_path"], f"{part}.csv")
+        index_path = os.path.join(config["data"]["index_path"], f"{part}_{config['data']['parts'][part]['limit']}.csv")
         if not os.path.exists(index_path):
             create_indexes(config)
         dataset = AnimeFacesDataset(config, index_path)
