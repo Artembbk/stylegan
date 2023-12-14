@@ -14,15 +14,12 @@ class AnimeFacesDataset(Dataset):
 
         self.data_path = config["data"]["data_path"]
         self.img_labels = pd.read_csv(index_file)
-        print(self.img_labels)
 
     def __len__(self):
         return len(self.img_labels)
     
     def __getitem__(self, idx):
-        print(idx)
-        print(self.img_labels.iloc[idx, 0])
-        img_path = os.path.join(self.data_path, self.img_labels.iloc[idx])
+        img_path = os.path.join(self.data_path, self.img_labels.iloc[idx, 0])
         image = read_image(img_path)
         return image
 
