@@ -8,7 +8,6 @@ def main(config):
     train_dataloader = dataloaders['train']
 
     train_features = next(iter(train_dataloader))
-    print(f"Feature batch shape: {train_features.size()}")
     img = train_features[0].permute(1, 2, 0) 
     plt.imshow(img)
     plt.show()
