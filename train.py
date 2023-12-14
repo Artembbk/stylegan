@@ -11,6 +11,7 @@ def main(config):
     img = train_features[0].permute(1, 2, 0) 
     plt.imshow(img)
     plt.show()
+    print("fdsf")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Parsing config file path')
