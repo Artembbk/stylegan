@@ -5,7 +5,7 @@ from torch.utils.data import DataLoader
 
 
 def create_indexes(config):
-    index = pd.DataFrame(list(os.listdir(config["data"]["data_path"])),  columns=['path'])
+    index = pd.DataFrame(list(os.listdir(config["data"]["data_path"])))
 
     
     i = 0
