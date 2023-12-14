@@ -21,7 +21,7 @@ class AnimeFacesDataset(Dataset):
     
     def __getitem__(self, idx):
         print(idx)
-        print(self.img_labels.iloc[idx])
+        print(self.img_labels.iloc[idx, 0])
         img_path = os.path.join(self.data_path, self.img_labels.iloc[idx])
         image = read_image(img_path)
         return image
