@@ -51,7 +51,6 @@ class Generator(nn.Module):
         self.layers = nn.Sequential(*self.layers)
 
     def forward(self, x):
-        print(x)
         x = self.layers(x)
         return x
     
