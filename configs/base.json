@@ -33,7 +33,8 @@
                 "channels": [3, 128, 256, 512, 1024, 1],
                 "strides": [2, 2, 2, 2, 4],
                 "kernel_sizes": [5, 5, 5, 5, 5],
-                "paddings": [2, 2, 2, 2, 1]
+                "paddings": [2, 2, 2, 2, 1],
+                "leaky_slope": 0.2
             }
         }
     },
