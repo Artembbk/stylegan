@@ -70,7 +70,7 @@ class Trainer():
                 wandb.log({"train discriminator loss": d_loss.item()}, step=i)
                 fake_images = fake_images*0.5 + 0.5
                 for j in range(5):
-                    wandb.log({"train image_{j}".format(j): wandb.Image(fake_images[j])})
+                    wandb.log({"train image_{}".format(j): wandb.Image(fake_images[j])})
     
             if i == self.len_epoch - 1:
                 break
@@ -97,7 +97,7 @@ class Trainer():
         wandb.log({f"{part} discriminator loss": total_d_loss.item()}, step=i)
         fake_images = fake_images*0.5 + 0.5
         for j in range(5):
-            wandb.log({f"{part} image_{j}".format(j): wandb.Image(fake_images[j])})
+            wandb.log({"{part} image_{}".format(j): wandb.Image(fake_images[j])})
 
 
     def train(self):
