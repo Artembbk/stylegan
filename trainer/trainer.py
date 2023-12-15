@@ -84,16 +84,16 @@ class Trainer():
             total_real_loss = 0
             for i, real in enumerate(self.dataloaders[part]):
                 g_loss, real_loss, fake_loss, d_loss, fake_images = self.process_batch(real, False)
-                total_g_loss += g_loss / len(self.dataloaders[part])
-                total_d_loss += d_loss / len(self.dataloaders[part])
-                total_fake_loss += fake_loss / len(self.dataloaders[part])
-                total_real_loss += real_loss / len(self.dataloaders[part])
+                total_g_loss += g_loss.item() / len(self.dataloaders[part])
+                total_d_loss += d_loss.item() / len(self.dataloaders[part])
+                total_fake_loss += fake_loss.item() / len(self.dataloaders[part])
+                total_real_loss += real_loss.item() / len(self.dataloaders[part])
             
 
-        wandb.log({f"{part} generator loss": total_g_loss.item()}, step=epoch*self.len_epoch - 1)
-        wandb.log({f"{part} discriminator(real) loss": total_real_loss.item()}, step=epoch*self.len_epoch - 1)
-        wandb.log({f"{part} discriminator(fake) loss": total_fake_loss.item()}, step=epoch*self.len_epoch - 1)
-        wandb.log({f"{part} discriminator loss": total_d_loss.item()}, step=epoch*self.len_epoch - 1)
+        wandb.log({f"{part} generator loss": total_g_loss}, step=epoch*self.len_epoch - 1)
+        wandb.log({f"{part} discriminator(real) loss": total_real_loss}, step=epoch*self.len_epoch - 1)
+        wandb.log({f"{part} discriminator(fake) loss": total_fake_loss}, step=epoch*self.len_epoch - 1)
+        wandb.log({f"{part} discriminator loss": total_d_loss}, step=epoch*self.len_epoch - 1)
         fake_images = fake_images*0.5 + 0.5
         for j in range(5):
             wandb.log({"{part} image_{}".format(j): wandb.Image(fake_images[j])})
