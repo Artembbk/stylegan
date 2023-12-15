@@ -62,7 +62,7 @@ class Discriminator(nn.Module):
 
         for i in range(len(strides)):
             self.layers.append(ConvBlock(channels[i], channels[i+1], kernel_sizes[i], 
-                                         strides[i], paddings[i], leaky_slope))
+                                         strides[i], paddings[i], leaky_slope if i != len(strides) - 1 else None))
             
         self.layers = nn.Sequential(*self.layers)
 
