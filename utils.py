@@ -17,8 +17,6 @@ def create_indexes(config):
             part_index.to_csv(f, index=False)
     
 
-
-
 def get_dataloaders(config):
     dataloaders = {}
     for part in config["data"]["parts"]:
@@ -28,3 +26,8 @@ def get_dataloaders(config):
         dataset = AnimeFacesDataset(config, index_path)
         dataloaders[part] = DataLoader(dataset, batch_size=config["data"]["parts"][part]["batch_size"], shuffle=True if part == "train" else False)
     return dataloaders
+
+def get_padding_t(stride, kernel_size):
+    # Вычисляем паддинг для увеличения размера в 2 раза
+    padding = (kernel_size - 2) // 2 + (stride - 1)
+    return padding

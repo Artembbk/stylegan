@@ -1,17 +1,44 @@
 import argparse
 import json
 from utils import get_dataloaders
+from model import Generator
+from model import Discriminator
 import matplotlib.pyplot as plt
+import torch
+from torch import optim
+from torch import nn
+import wandb
+from trainer import Trainer
 
 def main(config):
     dataloaders = get_dataloaders(config)
-    train_dataloader = dataloaders['train']
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    train_features = next(iter(train_dataloader))
-    img = train_features[0].permute(1, 2, 0) 
-    plt.imshow(img)
-    plt.show()
-    print("fdsf")
+    generator = Generator(**config["arch"]["Generator"]["args"]).to(device)
+    discriminator = Discriminator(**config["arch"]["Discriminator"]["args"]).to(device)
+
+    optim_d = getattr(optim, config["arch"]["optimizer"]["name"])(config["optimizer"]["args"])
+    optim_g = getattr(optim, config["arch"]["optimizer"]["name"])(config["optimizer"]["args"])
+
+    criterion = nn.BCELoss()
+
+    wandb.init(project="your_project_name")
+
+    trainer = Trainer(
+        config,
+        dataloaders,
+        generator,
+        discriminator,
+        optim_d,
+        optim_g,
+        criterion,
+        device
+    )
+
+    trainer.train()
+
+
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Parsing config file path')
