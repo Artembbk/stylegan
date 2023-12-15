@@ -15,7 +15,6 @@ class ConvtBlock(nn.Module):
         x = self.convt(x)
         x = self.activation(self.bn(x))
         return x
-
 class ConvBlock(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size, stride, padding, leaky_slope):
         super(ConvBlock, self).__init__()
@@ -51,6 +50,7 @@ class Generator(nn.Module):
         self.layers = nn.Sequential(*self.layers)
 
     def forward(self, x):
+        x = x.reshape((x.shape[0], x.shape[1], 1, 1))
         x = self.layers(x)
         return x
     
