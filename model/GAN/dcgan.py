@@ -50,6 +50,7 @@ class Generator(nn.Module):
         self.layers = nn.Sequential(*self.layers)
 
     def forward(self, x):
+        x = x.reshape((x.shape[0], x.shape[1], 1, 1))
         x = self.layers(x)
         return x
     
@@ -67,6 +68,7 @@ class Discriminator(nn.Module):
 
     def forward(self, x):
         x = self.layers(x)
+        x = x.reshape((x.shape[0], 1))
         return x
         
 

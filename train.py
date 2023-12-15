@@ -17,8 +17,8 @@ def main(config):
     generator = Generator(**config["arch"]["Generator"]["args"]).to(device)
     discriminator = Discriminator(**config["arch"]["Discriminator"]["args"]).to(device)
 
-    optim_d = getattr(optim, config["arch"]["optimizer"]["name"])(config["optimizer"]["args"])
-    optim_g = getattr(optim, config["arch"]["optimizer"]["name"])(config["optimizer"]["args"])
+    optim_d = getattr(optim, config["optimizer"]["name"])(config["optimizer"]["args"])
+    optim_g = getattr(optim, config["optimizer"]["name"])(config["optimizer"]["args"])
 
     criterion = nn.BCELoss()
 

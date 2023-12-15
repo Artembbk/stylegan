@@ -1,21 +1,52 @@
 {
+    "name": "base",
     "data": {
         "index_path": "/kaggle/working/stylegan",
         "data_path": "/kaggle/input/anime-faces/data",
         "parts": {
             "train": {
                 "batch_size": 32,
-                "limit": 100
+                "limit": 96
             },
             "val": {
                 "batch_size": 32,
-                "limit": 100
+                "limit": 96
             },
             "test": {
                 "batch_size": 32,
-                "limit": 100
+                "limit": 96
             }
         }
         
+    },
+    "arch": {
+        "Generator": {
+            "args": {
+                "channels": [100, 1024, 512, 256, 128, 3],
+                "strides": [1, 2, 2, 2, 2],
+                "kernel_sizes": [4, 4, 4, 4, 4],
+                "paddings": [0, 1, 1, 1, 1]
+            }
+        },
+        "Discriminator": {
+            "args": {
+                "channels": [3, 128, 256, 512, 1024, 1],
+                "strides": [2, 2, 2, 2, 4],
+                "kernel_sizes": [5, 5, 5, 5, 5],
+                "paddings": [2, 2, 2, 2, 1]
+            }
+        }
+    },
+    "optimizer": {
+        "name": "Adam",
+        "args": {
+            "lr": 0.0002,
+            "betas": [0.5, 0.999]
+        }
+    },
+    "trainer": {
+        "len_epoch": 3,
+        "log_period": 1,
+        "num_epochs": 10
     }
 }

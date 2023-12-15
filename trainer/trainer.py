@@ -72,7 +72,8 @@ class Trainer():
                 for j in range(5):
                     wandb.log({"train image_{j}".format(j): wandb.Image(fake_images[j])})
     
-
+            if i == self.len_epoch - 1:
+                break
 
     def evaluation(self):
         self.generator.eval()
