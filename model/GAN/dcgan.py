@@ -51,6 +51,7 @@ class Generator(nn.Module):
 
     def forward(self, x):
         x = x.reshape((x.shape[0], x.shape[1], 1, 1))
+        print(x)
         x = self.layers(x)
         return x
     
