@@ -17,6 +17,9 @@ def main(config):
     generator = Generator(**config["arch"]["Generator"]["args"]).to(device)
     discriminator = Discriminator(**config["arch"]["Discriminator"]["args"]).to(device)
 
+    print(generator)
+    print(discriminator)
+
     optim_d = getattr(optim, config["optimizer"]["name"])(generator.parameters(), **config["optimizer"]["args"])
     optim_g = getattr(optim, config["optimizer"]["name"])(discriminator.parameters(), **config["optimizer"]["args"])
 

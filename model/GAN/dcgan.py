@@ -10,7 +10,7 @@ class ConvtBlock(nn.Module):
         self.is_last = is_last
         self.convt = nn.ConvTranspose2d(in_channels, out_channels, kernel_size, stride, padding, bias=False)
         self.bn = nn.BatchNorm2d(out_channels)
-        self.activation = nn.Tanh() if is_last else nn.Tanh()
+        self.activation = nn.Tanh() if is_last else nn.ReLU()
 
     def forward(self, x):
         x = self.convt(x)
