@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader
 
 def create_indexes(config):
     index = pd.DataFrame(list(os.listdir(config["data"]["data_path"])))
-    print(index)
+    
 
     i = 0
     for part in config["data"]["parts"]:
@@ -14,7 +14,7 @@ def create_indexes(config):
         i = i+config["data"]["parts"][part]["limit"]
 
         with open(os.path.join(config["data"]["index_path"], f"{part}_{config['data']['parts'][part]['limit']}.csv"), "w") as f: 
-            part_index.to_csv(f, index=False)
+            part_index.to_csv(f, index=False, header=False)
     
 
 def get_dataloaders(config):
