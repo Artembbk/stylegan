@@ -4,25 +4,29 @@ import torch
 from utils import get_padding_t
 
 class ConvtBlock(nn.Module):
-    def __init__(self, in_channels, out_channels, kernel_size, stride, padding, activation):
+    def __init__(self, in_channels, out_channels, kernel_size, stride, padding, is_last=False):
         super(ConvtBlock, self).__init__()
 
-        self.convt = nn.ConvTranspose2d(in_channels, out_channels, kernel_size, stride, padding)
+        self.is_last = is_last
+        self.convt = nn.ConvTranspose2d(in_channels, out_channels, kernel_size, stride, padding, bias=False)
         self.bn = nn.BatchNorm2d(out_channels)
-        self.activation = activation
+        self.activation = nn.Tanh() if is_last else nn.Tanh()
 
     def forward(self, x):
         x = self.convt(x)
-        x = self.activation(self.bn(x))
+        if not self.is_last:
+            x = self.bn(x)
+        x = self.activation(x)
         return x
 class ConvBlock(nn.Module):
-    def __init__(self, in_channels, out_channels, kernel_size, stride, padding, leaky_slope):
+    def __init__(self, in_channels, out_channels, kernel_size, stride, padding, leaky_slope, is_bn):
         super(ConvBlock, self).__init__()
 
         self.layers = []
 
-        self.layers.append(nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding))
-        self.layers.append(nn.BatchNorm2d(out_channels))
+        self.layers.append(nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding, bias=False))
+        if is_bn:
+            self.layers.append(nn.BatchNorm2d(out_channels))
         if leaky_slope is not None:
             self.layers.append(nn.LeakyReLU(leaky_slope))
         else: 
@@ -43,9 +47,9 @@ class Generator(nn.Module):
         self.layers = []
 
         for i in range(len(strides)):
-            activation = nn.ReLU() if i != len(strides) - 1 else nn.Tanh()
+            is_last = (i == (len(strides) - 1))
             self.layers.append(ConvtBlock(channels[i], channels[i+1], kernel_sizes[i], 
-                                         strides[i], paddings[i], activation))
+                                         strides[i], paddings[i], is_last))
             
         self.layers = nn.Sequential(*self.layers)
 
@@ -61,8 +65,13 @@ class Discriminator(nn.Module):
         self.layers = []
 
         for i in range(len(strides)):
+            leaky_slope_i = leaky_slope if i != len(strides) - 1 else None
+            is_bn = True
+            if i == 0 or i == len(strides) - 1:
+                is_bn = False
+            
             self.layers.append(ConvBlock(channels[i], channels[i+1], kernel_sizes[i], 
-                                         strides[i], paddings[i], leaky_slope if i != len(strides) - 1 else None))
+                                         strides[i], paddings[i], leaky_slope_i, is_bn))
             
         self.layers = nn.Sequential(*self.layers)
 
