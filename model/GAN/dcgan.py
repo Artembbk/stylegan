@@ -8,15 +8,15 @@ class ConvtBlock(nn.Module):
         super(ConvtBlock, self).__init__()
 
         self.is_last = is_last
-        self.convt = nn.ConvTranspose2d(in_channels, out_channels, kernel_size, stride, padding, bias=False)
-        self.bn = nn.BatchNorm2d(out_channels)
-        self.activation = nn.Tanh() if is_last else nn.ReLU()
+        self.layers = []
+        self.layers.append(nn.ConvTranspose2d(in_channels, out_channels, kernel_size, stride, padding, bias=False))
+        if not self.is_last:
+            self.layers.append(nn.BatchNorm2d(out_channels))
+        self.layers.append(nn.Tanh() if is_last else nn.ReLU(inplace=True))
+        self.layers = nn.Sequential(*self.layers)
 
     def forward(self, x):
-        x = self.convt(x)
-        if not self.is_last:
-            x = self.bn(x)
-        x = self.activation(x)
+        x = self.layers(x)
         return x
 class ConvBlock(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size, stride, padding, leaky_slope, is_bn):
@@ -28,7 +28,7 @@ class ConvBlock(nn.Module):
         if is_bn:
             self.layers.append(nn.BatchNorm2d(out_channels))
         if leaky_slope is not None:
-            self.layers.append(nn.LeakyReLU(leaky_slope))
+            self.layers.append(nn.LeakyReLU(leaky_slope, inplace=True))
         else: 
             self.layers.append(nn.Sigmoid())
 
