@@ -20,8 +20,8 @@ def main(config):
     print(generator)
     print(discriminator)
 
-    optim_d = getattr(optim, config["optimizer"]["name"])(generator.parameters(), **config["optimizer"]["args"])
-    optim_g = getattr(optim, config["optimizer"]["name"])(discriminator.parameters(), **config["optimizer"]["args"])
+    optim_d = getattr(optim, config["optimizer"]["name"])(discriminator.parameters(), **config["optimizer"]["args"])
+    optim_g = getattr(optim, config["optimizer"]["name"])(generator.parameters(), **config["optimizer"]["args"])
 
     criterion = nn.BCELoss()
 
