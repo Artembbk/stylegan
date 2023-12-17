@@ -5,8 +5,8 @@
         "data_path": "/kaggle/input/anime-faces/data/data",
         "parts": {
             "train": {
-                "batch_size": 2,
-                "limit": 2
+                "batch_size": 5,
+                "limit": 5
             }
         }
         
