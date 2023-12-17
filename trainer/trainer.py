@@ -1,7 +1,10 @@
 import torch
 from torch import nn
 import wandb
+import piq
 from tqdm import tqdm
+from dataset import FakeDataset
+from torch.utils.data import DataLoader
 
 class Trainer():
     def __init__(self,config, dataloaders, generator, discriminator, optim_d, optim_g, criterion, device):
@@ -20,7 +23,7 @@ class Trainer():
         self.num_epochs = config["trainer"]["num_epochs"]
     
     def process_batch(self, real, train=True):
-        real = real.to(self.device)
+        real = real["images"].to(self.device)
 
         if train:
          self.optim_d.zero_grad()
@@ -54,30 +57,31 @@ class Trainer():
             g_loss.backward()
             self.optim_g.step()
 
-        return g_loss, real_loss, fake_loss, d_loss, fake_images
+        if not train:
+            ssim = piq.ssim(fake_images, real, data_range=1.)
+            return g_loss, real_loss, fake_loss, d_loss, ssim, fake_images
+        return g_loss, real_loss, fake_loss, d_loss
         
 
     def train_epoch(self, epoch):
         self.generator.train()
         self.discriminator.train()
         for i, real in tqdm(enumerate(self.dataloaders["train"]), total=self.len_epoch, desc="Train"):
-            g_loss, real_loss, fake_loss, d_loss, fake_images = self.process_batch(real, True)
+            g_loss, real_loss, fake_loss, d_loss = self.process_batch(real, True)
 
             if i % self.log_period == 0:
                 wandb.log({"train generator loss": g_loss.item()}, step=(epoch - 1) * self.len_epoch + i)
                 wandb.log({"train discriminator(real) loss": real_loss.item()}, step=(epoch - 1) * self.len_epoch + i)
                 wandb.log({"train discriminator(fake) loss": fake_loss.item()}, step=(epoch - 1) * self.len_epoch + i)
                 wandb.log({"train discriminator loss": d_loss.item()}, step=(epoch - 1) * self.len_epoch + i)
-                fake_images = fake_images*0.5 + 0.5
-                for j in range(5):
-                    wandb.log({"train image_{}".format(j): wandb.Image(fake_images[j])}, step=(epoch - 1) * self.len_epoch + i)
-    
+
             if i == self.len_epoch - 1:
                 break
 
     def evaluation(self, epoch):
         self.generator.eval()
         self.discriminator.eval()
+        all_fake_images = []
         for part in self.config["data"]["parts"]:
             if part == "train":
                 continue
@@ -85,21 +89,33 @@ class Trainer():
             total_d_loss = 0
             total_fake_loss = 0
             total_real_loss = 0
+            total_ssim = 0
             for i, real in tqdm(enumerate(self.dataloaders[part]), total=len(self.dataloaders[part]), desc=part):
-                g_loss, real_loss, fake_loss, d_loss, fake_images = self.process_batch(real, False)
+                g_loss, real_loss, fake_loss, d_loss, ssim, fake_images = self.process_batch(real, False)
+                all_fake_images.append(fake_images.detach().cpu())
                 total_g_loss += g_loss.item() / len(self.dataloaders[part])
                 total_d_loss += d_loss.item() / len(self.dataloaders[part])
                 total_fake_loss += fake_loss.item() / len(self.dataloaders[part])
                 total_real_loss += real_loss.item() / len(self.dataloaders[part])
-            
+                total_ssim += ssim.item() / len(self.dataloaders[part])
 
-        wandb.log({f"{part} generator loss": total_g_loss}, step=epoch * self.len_epoch)
-        wandb.log({f"{part} discriminator(real) loss": total_real_loss}, step=epoch * self.len_epoch)
-        wandb.log({f"{part} discriminator(fake) loss": total_fake_loss}, step=epoch * self.len_epoch)
-        wandb.log({f"{part} discriminator loss": total_d_loss}, step=epoch * self.len_epoch)
-        fake_images = fake_images*0.5 + 0.5
-        for j in range(5):
-            wandb.log({f"{part} image_{j}": wandb.Image(fake_images[j])}, step=epoch * self.len_epoch)
+            all_fake_images = torch.cat(all_fake_images)
+            fake_dataset = FakeDataset(all_fake_images)
+            fake_dataloader = DataLoader(fake_dataset, batch_size=self.config["data"]["parts"][part]["batch_size"])
+            fid_obj = piq.FID()
+            real_features = fid_obj.compute_feats(self.dataloaders[part])
+            fake_features = fid_obj.compute_feats(fake_dataloader)
+            fid = fid_obj(fake_features, real_features)
+
+            wandb.log({f"{part} generator loss": total_g_loss}, step=epoch * self.len_epoch)
+            wandb.log({f"{part} discriminator(real) loss": total_real_loss}, step=epoch * self.len_epoch)
+            wandb.log({f"{part} discriminator(fake) loss": total_fake_loss}, step=epoch * self.len_epoch)
+            wandb.log({f"{part} discriminator loss": total_d_loss}, step=epoch * self.len_epoch)
+            wandb.log({f"{part} ssim": total_ssim}, step=epoch * self.len_epoch)
+            wandb.log({f"{part} fid": fid}, step=epoch * self.len_epoch)
+            fake_images = fake_images*0.5 + 0.5
+            for j in range(5):
+                wandb.log({f"{part} image_{j}": wandb.Image(fake_images[j])}, step=epoch * self.len_epoch)
 
 
     def train(self):
