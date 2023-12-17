@@ -8,11 +8,6 @@ import json
 def create_indexes(config):
     index = list(os.listdir(config["data"]["data_path"]))
 
-    # Чтение списка из файла с помощью json
-    with open('my_list.json', 'r') as file:
-        read_list = json.load(file)
-
-
     i = 0
     for part in config["data"]["parts"]:
         part_index = index[i:config["data"]["parts"][part]["limit"]]
