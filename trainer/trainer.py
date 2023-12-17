@@ -34,7 +34,6 @@ class Trainer():
 
         z = torch.randn(real.shape[0], self.noise_size).to(self.device)
         fake_images = self.generator(z)
-        print(fake_images)
         fake_labels = torch.zeros(real.shape[0], 1).to(self.device)
         fake_preds = self.discriminator(fake_images)
         fake_loss = self.criterion(fake_preds, fake_labels)

@@ -20,7 +20,7 @@ class AnimeFacesDataset(Dataset):
 
         self.transform = transforms.Compose(
             [
-                transforms.Normalize(0.5, 0.5)
+                transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
             ])
 
     def __len__(self):
@@ -31,5 +31,6 @@ class AnimeFacesDataset(Dataset):
         image = read_image(img_path)
         image = torch.tensor(image, dtype=torch.float32)
         image = self.transform(image)
+        print(image.min(), image.max())
         return {"images": image}
 
