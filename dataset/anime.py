@@ -28,6 +28,9 @@ class AnimeFacesDataset(Dataset):
     
     def __getitem__(self, idx):
         img_path = os.path.join(self.data_path, self.img_labels[idx])
+        
+        if os.path.exists(img_path):
+            print(self.img_labels[idx])
         image = read_image(img_path)
         image = torch.tensor(image, dtype=torch.float32)
         image = self.transform(image)
