@@ -10,11 +10,8 @@ def create_indexes(config):
 
     i = 0
     for part in config["data"]["parts"]:
-        print(i)
-        print(config["data"]["parts"][part]["limit"])
-        part_index = index[i:config["data"]["parts"][part]["limit"]]
+        part_index = index[i:i+config["data"]["parts"][part]["limit"]]
         i = i+config["data"]["parts"][part]["limit"]
-        print(len(part_index))
         
 
         with open(os.path.join(config["data"]["index_path"], f"{part}_{config['data']['parts'][part]['limit']}.json"), "w") as f: 
