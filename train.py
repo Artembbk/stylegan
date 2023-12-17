@@ -22,7 +22,7 @@ def main(config):
 
     criterion = nn.BCELoss()
 
-    wandb.init(project="your_project_name")
+    wandb.init(project="anime")
 
     trainer = Trainer(
         config,

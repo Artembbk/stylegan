@@ -6,15 +6,15 @@
         "parts": {
             "train": {
                 "batch_size": 32,
-                "limit": 96
+                "limit": 19488
             },
             "val": {
                 "batch_size": 32,
-                "limit": 96
+                "limit": 1024
             },
             "test": {
                 "batch_size": 32,
-                "limit": 96
+                "limit": 1024
             }
         }
         
@@ -46,8 +46,8 @@
         }
     },
     "trainer": {
-        "len_epoch": 3,
-        "log_period": 1,
+        "len_epoch": 609,
+        "log_period": 10,
         "num_epochs": 10
     }
 }
