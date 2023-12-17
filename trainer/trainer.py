@@ -4,7 +4,7 @@ import wandb
 import piq
 from tqdm import tqdm
 from dataset import FakeDataset
-from utils import denormalize_from_negative_one
+from normalize import denormalize_from_negative_one
 from torch.utils.data import DataLoader
 
 class Trainer():

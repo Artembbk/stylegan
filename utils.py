@@ -34,11 +34,3 @@ def get_padding_t(stride, kernel_size):
     padding = (kernel_size - 2) // 2 + (stride - 1)
     return padding
 
-def normalize_negative_one(self, img):
-    normalized_input = (img - torch.amin(img)) / (torch.amax(img) - torch.amin(img))
-    return 2*normalized_input - 1
-
-def denormalize_from_negative_one(self, normalized_img):
-    denormalized_input = 0.5 * (normalized_img + 1.0)
-    denormalized_input = denormalized_input * 255.0
-    return denormalized_input.type(torch.uint8)

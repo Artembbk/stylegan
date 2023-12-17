@@ -9,7 +9,7 @@ from torchvision.io import read_image
 import os
 import torchvision.transforms as transforms
 import json
-from utils import normalize_negative_one
+from normalize import normalize_negative_one
 
 class AnimeFacesDataset(Dataset):
     def __init__(self, config, index_file):
