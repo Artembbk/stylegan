@@ -60,7 +60,7 @@ class Trainer():
     def train_epoch(self, epoch):
         self.generator.train()
         self.discriminator.train()
-        for i, real in tqdm(enumerate(self.dataloaders["train"]), total=self.len_epochs):
+        for i, real in tqdm(enumerate(self.dataloaders["train"]), total=self.len_epoch):
             g_loss, real_loss, fake_loss, d_loss, fake_images = self.process_batch(real, True)
 
             if i % self.log_period == 0:
