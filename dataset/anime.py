@@ -30,6 +30,7 @@ class AnimeFacesDataset(Dataset):
         img_path = os.path.join(self.data_path, self.img_labels[idx])
         image = read_image(img_path)
         image = torch.tensor(image, dtype=torch.float32)
+        print(image.min(), image.max())
         image = self.transform(image)
         print(image.min(), image.max())
         return {"images": image}
