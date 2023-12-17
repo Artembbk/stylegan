@@ -84,10 +84,11 @@ class Trainer():
     def evaluation(self, epoch):
         self.generator.eval()
         self.discriminator.eval()
-        all_fake_images = []
+        
         for part in self.config["data"]["parts"]:
             if part == "train":
                 continue
+            all_fake_images = []
             total_g_loss = 0
             total_d_loss = 0
             total_fake_loss = 0
