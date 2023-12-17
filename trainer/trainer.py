@@ -100,7 +100,7 @@ class Trainer():
 
 
     def train(self):
-        for epoch in range(self.num_epochs):
+        for epoch in range(1, self.num_epochs + 1):
             self.train_epoch(epoch)
             self.evaluation(epoch)
 
