@@ -8,6 +8,7 @@ import torch
 from torch import optim
 from torch import nn
 import wandb
+from utils import weights_init
 from trainer import Trainer
 
 def main(config):
@@ -19,6 +20,9 @@ def main(config):
 
     print(generator)
     print(discriminator)
+
+    generator.apply(weights_init)
+    discriminator.apply(weights_init)
 
     optim_d = getattr(optim, config["optimizer"]["name"])(discriminator.parameters(), **config["optimizer"]["args"])
     optim_g = getattr(optim, config["optimizer"]["name"])(generator.parameters(), **config["optimizer"]["args"])

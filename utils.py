@@ -3,6 +3,7 @@ import os
 import pandas as pd
 from torch.utils.data import DataLoader
 import json
+from torch import nn
 import torch
 
 
@@ -34,3 +35,10 @@ def get_padding_t(stride, kernel_size):
     padding = (kernel_size - 2) // 2 + (stride - 1)
     return padding
 
+def weights_init(m):
+    classname = m.__class__.__name__
+    if classname.find('Conv') != -1:
+        nn.init.normal_(m.weight.data, 0.0, 0.02)
+    elif classname.find('BatchNorm') != -1:
+        nn.init.normal_(m.weight.data, 1.0, 0.02)
+        nn.init.constant_(m.bias.data, 0)
