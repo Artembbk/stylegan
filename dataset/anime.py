@@ -31,6 +31,5 @@ class AnimeFacesDataset(Dataset):
         image = read_image(img_path)
         image = torch.tensor(image, dtype=torch.float32)
         image = self.transform(image)
-        print(image)
         return {"images": image}
 
