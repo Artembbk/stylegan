@@ -4,6 +4,7 @@ import wandb
 import piq
 from tqdm import tqdm
 from dataset import FakeDataset
+from utils import denormalize_from_negative_one
 from torch.utils.data import DataLoader
 
 class Trainer():
@@ -58,7 +59,7 @@ class Trainer():
             self.optim_g.step()
 
         if not train:
-            ssim = piq.ssim(fake_images*0.5 + 0.5, real*0.5 + 0.5, data_range=1.)
+            ssim = piq.ssim(denormalize_from_negative_one(fake_images), denormalize_from_negative_one(real), data_range=255)
             return g_loss, real_loss, fake_loss, d_loss, ssim, fake_images
         return g_loss, real_loss, fake_loss, d_loss
         
