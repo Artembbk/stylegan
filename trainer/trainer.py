@@ -6,6 +6,7 @@ from tqdm import tqdm
 from dataset import FakeDataset
 from normalize import denormalize_from_negative_one
 from torch.utils.data import DataLoader
+from piq.feature_extractors import InceptionV3
 
 class Trainer():
     def __init__(self,config, dataloaders, generator, discriminator, optim_d, optim_g, criterion, device):
@@ -17,6 +18,7 @@ class Trainer():
         self.optim_g = optim_g
         self.criterion = criterion
         self.device = device
+        self.feature_extractor = InceptionV3(normalize_input=False)
 
         self.len_epoch = config["trainer"]["len_epoch"]
         self.noise_size = config["arch"]["Generator"]["args"]["channels"][0]
@@ -59,7 +61,7 @@ class Trainer():
             self.optim_g.step()
 
         if not train:
-            ssim = piq.ssim(denormalize_from_negative_one(fake_images), denormalize_from_negative_one(real), data_range=255)
+            ssim = piq.ssim(fake_images*0.5 + 0.5, real*0.5 + 0.5, data_range=1.)
             return g_loss, real_loss, fake_loss, d_loss, ssim, fake_images
         return g_loss, real_loss, fake_loss, d_loss
         
@@ -104,8 +106,8 @@ class Trainer():
             fake_dataset = FakeDataset(all_fake_images)
             fake_dataloader = DataLoader(fake_dataset, batch_size=self.config["data"]["parts"][part]["batch_size"])
             fid_obj = piq.FID()
-            real_features = fid_obj.compute_feats(self.dataloaders[part])
-            fake_features = fid_obj.compute_feats(fake_dataloader)
+            real_features = fid_obj.compute_feats(self.dataloaders[part], feature_extractor=self.feature_extractor)
+            fake_features = fid_obj.compute_feats(fake_dataloader, feature_extractor=self.feature_extractor)
             fid = fid_obj(fake_features, real_features)
 
             wandb.log({f"{part} generator loss": total_g_loss}, step=epoch * self.len_epoch)
