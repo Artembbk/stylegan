@@ -58,7 +58,7 @@ class Trainer():
             self.optim_g.step()
 
         if not train:
-            ssim = piq.ssim(fake_images, real, data_range=1.)
+            ssim = piq.ssim(fake_images*0.5 + 0.5, real*0.5 + 0.5, data_range=1.)
             return g_loss, real_loss, fake_loss, d_loss, ssim, fake_images
         return g_loss, real_loss, fake_loss, d_loss
         
