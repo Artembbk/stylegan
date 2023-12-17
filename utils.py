@@ -2,25 +2,30 @@ from dataset import AnimeFacesDataset
 import os
 import pandas as pd
 from torch.utils.data import DataLoader
+import json
 
 
 def create_indexes(config):
-    index = pd.DataFrame(list(os.listdir(config["data"]["data_path"])))
-    
+    index = list(os.listdir(config["data"]["data_path"]))
+
+    # Чтение списка из файла с помощью json
+    with open('my_list.json', 'r') as file:
+        read_list = json.load(file)
+
 
     i = 0
     for part in config["data"]["parts"]:
-        part_index = index.iloc[i:config["data"]["parts"][part]["limit"]]
+        part_index = index[i:config["data"]["parts"][part]["limit"]]
         i = i+config["data"]["parts"][part]["limit"]
 
-        with open(os.path.join(config["data"]["index_path"], f"{part}_{config['data']['parts'][part]['limit']}.csv"), "w") as f: 
-            part_index.to_csv(f, index=False, header=False)
+        with open(os.path.join(config["data"]["index_path"], f"{part}_{config['data']['parts'][part]['limit']}.json"), "w") as f: 
+            json.dump(part_index, file)
     
 
 def get_dataloaders(config):
     dataloaders = {}
     for part in config["data"]["parts"]:
-        index_path = os.path.join(config["data"]["index_path"], f"{part}_{config['data']['parts'][part]['limit']}.csv")
+        index_path = os.path.join(config["data"]["index_path"], f"{part}_{config['data']['parts'][part]['limit']}.json")
         if not os.path.exists(index_path):
             create_indexes(config)
         dataset = AnimeFacesDataset(config, index_path)

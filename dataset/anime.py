@@ -8,13 +8,16 @@ import pandas as pd
 from torchvision.io import read_image
 import os
 import torchvision.transforms as transforms
+import json
 
 class AnimeFacesDataset(Dataset):
     def __init__(self, config, index_file):
         super(AnimeFacesDataset, self).__init__()
 
         self.data_path = config["data"]["data_path"]
-        self.img_labels = pd.read_csv(index_file)
+        with open(index_file, 'r') as file:
+            self.img_labels = json.load(file)
+            
         self.transform = transforms.Compose(
             [
                 transforms.Normalize(0.5, 0.5)
