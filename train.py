@@ -21,6 +21,8 @@ def main(config):
     print(generator)
     print(discriminator)
 
+    print(discriminator.__class__.__name__)
+
     generator.apply(weights_init)
     discriminator.apply(weights_init)
 
