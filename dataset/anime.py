@@ -29,6 +29,7 @@ class AnimeFacesDataset(Dataset):
         img_path = os.path.join(self.data_path, self.img_labels[idx])
         image = read_image(img_path)
         image = torch.tensor(image, dtype=torch.float32)
+        print(image.max())
         image = self.normalize_negative_one(image)
         return {"images": image}
 
