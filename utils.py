@@ -6,6 +6,7 @@ from torch.utils.data import DataLoader
 
 def create_indexes(config):
     index = pd.DataFrame(list(os.listdir(config["data"]["data_path"])))
+    print(index)
 
     i = 0
     for part in config["data"]["parts"]:
