@@ -7,6 +7,14 @@
             "train": {
                 "batch_size": 5,
                 "limit": 5
+            },
+            "val": {
+                "batch_size": 5,
+                "limit": 5
+            },
+            "test": {
+                "batch_size": 5,
+                "limit": 5
             }
         }
         
