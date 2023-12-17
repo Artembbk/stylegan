@@ -3,9 +3,9 @@ from torch import nn
 import torch
 from utils import get_padding_t
 
-class ConvtBlock(nn.Module):
+class ContBlock(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size, stride, padding, is_last=False):
-        super(ConvtBlock, self).__init__()
+        super(ContBlock, self).__init__()
 
         self.is_last = is_last
         self.layers = []
@@ -18,9 +18,9 @@ class ConvtBlock(nn.Module):
     def forward(self, x):
         x = self.layers(x)
         return x
-class ConvBlock(nn.Module):
+class ConBlock(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size, stride, padding, leaky_slope, is_bn):
-        super(ConvBlock, self).__init__()
+        super(ConBlock, self).__init__()
 
         self.layers = []
 
@@ -48,7 +48,7 @@ class Generator(nn.Module):
 
         for i in range(len(strides)):
             is_last = (i == (len(strides) - 1))
-            self.layers.append(ConvtBlock(channels[i], channels[i+1], kernel_sizes[i], 
+            self.layers.append(ContBlock(channels[i], channels[i+1], kernel_sizes[i], 
                                          strides[i], paddings[i], is_last))
             
         self.layers = nn.Sequential(*self.layers)
@@ -70,7 +70,7 @@ class Discriminator(nn.Module):
             if i == 0 or i == len(strides) - 1:
                 is_bn = False
             
-            self.layers.append(ConvBlock(channels[i], channels[i+1], kernel_sizes[i], 
+            self.layers.append(ConBlock(channels[i], channels[i+1], kernel_sizes[i], 
                                          strides[i], paddings[i], leaky_slope_i, is_bn))
             
         self.layers = nn.Sequential(*self.layers)
