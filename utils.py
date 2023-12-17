@@ -14,7 +14,7 @@ def create_indexes(config):
         i = i+config["data"]["parts"][part]["limit"]
 
         with open(os.path.join(config["data"]["index_path"], f"{part}_{config['data']['parts'][part]['limit']}.json"), "w") as f: 
-            json.dump(part_index, file)
+            json.dump(part_index, f)
     
 
 def get_dataloaders(config):
