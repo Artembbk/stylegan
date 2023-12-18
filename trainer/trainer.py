@@ -6,6 +6,7 @@ from tqdm import tqdm
 from dataset import FakeDataset
 from normalize import denormalize_from_negative_one
 from torch.utils.data import DataLoader
+import torchvision
 from piq.feature_extractors import InceptionV3
 
 class Trainer():
@@ -19,6 +20,7 @@ class Trainer():
         self.criterion = criterion
         self.device = device
         self.feature_extractor = InceptionV3(normalize_input=False)
+        self.fixed_noise = torch.randn(64, 100, 1, 1, device=device)
 
         self.len_epoch = config["trainer"]["len_epoch"]
         self.noise_size = config["arch"]["Generator"]["args"]["channels"][0]
@@ -116,11 +118,13 @@ class Trainer():
             wandb.log({f"{part} discriminator(fake) loss": total_fake_loss}, step=epoch * self.len_epoch)
             wandb.log({f"{part} discriminator loss": total_d_loss}, step=epoch * self.len_epoch)
             wandb.log({f"{part} ssim": total_ssim}, step=epoch * self.len_epoch)
-            wandb.log({f"{part} fid": fid}, step=epoch * self.len_epoch)
-            fake_images = fake_images*0.5 + 0.5
-            for j in range(5):
-                wandb.log({f"{part} image_{j}": wandb.Image(fake_images[j])}, step=epoch * self.len_epoch)
-
+           
+            with torch.no_grad():
+                fake = self.generator(self.fixed_noise).detach().cpu()
+                fake = fake*0.5 + 0.5
+                fake_grid = torchvision.utils.make_grid(fake, padding=2, normalize=True)
+                wandb.log({f"{part} images": wandb.Image(fake_grid)}, step=epoch * self.len_epoch)
+           
 
     def train(self):
         for epoch in range(1, self.num_epochs + 1):

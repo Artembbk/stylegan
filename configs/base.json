@@ -5,15 +5,15 @@
         "data_path": "/kaggle/input/anime-faces/data/data",
         "parts": {
             "train": {
-                "batch_size": 32,
+                "batch_size": 64,
                 "limit": 19488
             },
             "val": {
-                "batch_size": 32,
+                "batch_size": 64,
                 "limit": 1024
             },
             "test": {
-                "batch_size": 32,
+                "batch_size": 64,
                 "limit": 1024
             }
         }
@@ -46,7 +46,7 @@
         }
     },
     "trainer": {
-        "len_epoch": 609,
+        "len_epoch": 304,
         "log_period": 10,
         "num_epochs": 1000
     }

@@ -23,8 +23,8 @@ def main(config):
 
     print(discriminator.__class__.__name__)
 
-    generator.apply(weights_init)
-    discriminator.apply(weights_init)
+    # generator.apply(weights_init)
+    # discriminator.apply(weights_init)
 
     optim_d = getattr(optim, config["optimizer"]["name"])(discriminator.parameters(), **config["optimizer"]["args"])
     optim_g = getattr(optim, config["optimizer"]["name"])(generator.parameters(), **config["optimizer"]["args"])
