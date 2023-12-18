@@ -118,6 +118,7 @@ class Trainer():
             wandb.log({f"{part} discriminator(fake) loss": total_fake_loss}, step=epoch * self.len_epoch)
             wandb.log({f"{part} discriminator loss": total_d_loss}, step=epoch * self.len_epoch)
             wandb.log({f"{part} ssim": total_ssim}, step=epoch * self.len_epoch)
+            wandb.log({f"{part} fid": fid}, step=epoch * self.len_epoch)
            
             with torch.no_grad():
                 fake = self.generator(self.fixed_noise).detach().cpu()
