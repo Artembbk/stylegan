@@ -3,6 +3,7 @@
     "data": {
         "index_path": "/kaggle/working/stylegan",
         "data_path": "/kaggle/input/anime-faces/data/data",
+        "num_workers": 2,
         "parts": {
             "train": {
                 "batch_size": 64,

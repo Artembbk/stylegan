@@ -27,7 +27,7 @@ def get_dataloaders(config):
         if not os.path.exists(index_path):
             create_indexes(config)
         dataset = AnimeFacesDataset(config, index_path)
-        dataloaders[part] = DataLoader(dataset, batch_size=config["data"]["parts"][part]["batch_size"], shuffle=True if part == "train" else False)
+        dataloaders[part] = DataLoader(dataset, batch_size=config["data"]["parts"][part]["batch_size"], shuffle=True if part == "train" else False, num_workers=config["data"]["num_workers"])
     return dataloaders
 
 def get_padding_t(stride, kernel_size):
