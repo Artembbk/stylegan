@@ -49,6 +49,6 @@
     "trainer": {
         "len_epoch": 304,
         "log_period": 10,
-        "num_epochs": 1000
+        "num_epochs": 100
     }
 }
